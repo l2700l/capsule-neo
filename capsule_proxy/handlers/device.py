@@ -15,3 +15,10 @@ def get_firmware(handler, body=b""):
             "need_update": False,
         }
     }, "json"
+
+def set_stat(handler, body=""):
+    return 200, {
+            "result": {
+                "validation_errors":None
+            }
+    }, "json"

@@ -2,7 +2,7 @@
 import re
 import uuid
 
-from .handlers.device import get_firmware
+from .handlers.device import get_firmware, set_stat
 from .handlers.settings import (
     get_reminders, get_night_mode, set_night_mode,
     get_content_privacy, get_safe_mode, update_general, get_general,
@@ -12,6 +12,7 @@ from .handlers.logs import send_runtime_logs
 
 ROUTES = [
     ("GET", re.compile(r"^/device/firmware$"), None, get_firmware),
+    ("POST", re.compile(r"^/device/stat$"), None, set_stat),
     ("GET", re.compile(r"^/account/settings/v1/reminders$"), None, get_reminders),
     ("POST", re.compile(r"^/rt_logs/send$"), "application/x-msgpack", send_runtime_logs),
     ("GET", re.compile(r"^/device/settings/v1/[^/]+/night_mode$"), None, get_night_mode),
