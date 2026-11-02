@@ -1,3 +1,5 @@
+import json
+
 from ..config import TIMEZONE_NAME
 
 def get_reminders(handler, body=b""):
@@ -41,8 +43,8 @@ stop_at - int, время конца расписания, секунды с п�
     }]}
 
 
-def get_night_mode_item(handler, body=b""):
-    return get_night_mode(handler, body)
+def set_night_mode(handler, body=b""):
+    return {"old": get_night_mode(handler, body), "new": json.dumps(body)}
 
 
 def get_content_privacy(handler, body=b""):
