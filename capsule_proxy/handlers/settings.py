@@ -44,7 +44,7 @@ stop_at - int, время конца расписания, секунды с п�
 
 
 def set_night_mode(handler, body=b""):
-    return {"old": get_night_mode(handler, body), "new": json.dumps(body)}
+    return {"old": get_night_mode(handler, body), "new": json.dumps(str(body))}
 
 
 def get_content_privacy(handler, body=b""):
