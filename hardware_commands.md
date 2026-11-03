@@ -45,7 +45,7 @@
 255,
 255
           ],
-            "seconds": none,
+            "seconds": null,
             "duration": 15.0
         }
       ],
