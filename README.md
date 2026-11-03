@@ -8,9 +8,39 @@
 
 Отдельно вынесены типы команд, которые принимает колонка, были вытащены из разговора с колонкой в сценарии "обычного использования"
 
-Из прошивки получилось вытащить: repeat_playlist_control, send_event_data, send_event, shuffle_control, speed_test, reminder, scenario_step, enter_light_mode, exit_light_mode, enter_flowmode, bg_music, play_url, cancel_notification, reminder_cancel, playlist, kws_skip, tracks, media_type, level, seek_track, seek_second, timestamp_delta, cancel, elapsed, turn_off, speed_test_end_event, event_media_end, stat_flags
+Из прошивки получилось вытащить: send_event_data (event, callback_data), send_event (event, callback_data), speed_test, reminder, scenario_step (text, event, callback_data), enter_flowmode (callback_data), flowmode_sound (url), bg_music, flowmode_bg_music (url, count), cancel_notification, reminder_cancel, playlist (eof, seek_track, seek_second)
 
-tracks, media_type, level, seek_track, seek_second - вероятно относятся к внутренней структуре запроса media
+## Зависимости
+
+Для работы проекта необходимы:
+
+- **Python 3.11+**
+- **Docker Compose** — для запуска Nginx.
+- **FFmpeg** — для конвертации аудио в Ogg Opus при использовании локального TTS.
+- **PyTorch и NumPy** — устанавливаются автоматически из `requirements.txt` и используются движком Silero TTS.
+
+### Установка FFmpeg
+
+**macOS (Homebrew):**
+
+```bash
+brew install ffmpeg
+```
+
+**Ubuntu / Debian:**
+
+```bash
+sudo apt update
+sudo apt install ffmpeg
+```
+
+Проверьте установку:
+
+```bash
+ffmpeg -version
+```
+
+FFmpeg должен быть доступен через `PATH`. Без него локальная генерация речи не сможет преобразовать аудио в формат, используемый колонкой.
 
 ## Запуск
 

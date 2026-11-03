@@ -7,6 +7,7 @@ from ..config import UPSTREAM_HOST, UPSTREAM_IP, CAPTURE_DIR, LOCAL_RADIO_URL, R
 from ..logging_utils import safe_headers
 from ..upstream import DirectHTTPSConnection, filtered_headers
 from ..http_utils import send_bytes
+from ..protocol import Response
 
 HOP_BY_HOP = {
     "connection", "keep-alive", "proxy-authenticate", "proxy-authorization",
@@ -87,6 +88,13 @@ def proxy_phrase_create(handler, body):
     finally:
         conn.close()
 
+def build_custom_phrase_result(intent):
+    if intent == "music.play_track":
+        response = Response(skill="custom", intent="custom.custom").say("Включаю анимацию дисплея").show_digits("CEF5", duration=4.0).delay(4000).bluetooth(True).delay(2000).bluetooth(False).delay(2000).to_dict()
+        print(response)
+        return response
+
+    return None
 
 def proxy_phrase_result(handler):
     capture_dir = _capture_dir()
@@ -100,7 +108,20 @@ def proxy_phrase_result(handler):
         (capture_dir / "response_original.bin").write_bytes(original_body)
         content_type = next((v for k, v in upstream.getheaders() if k.lower() == "content-type"), "application/json")
         payload = json.loads(original_body)
-        modified = replace_radio_urls(payload) # подмена ссылки радио на собственное
+
+        intent = (
+            payload.get("result", {}).get("intent")
+            if isinstance(payload, dict)
+            else None
+        )
+
+        custom_payload = build_custom_phrase_result(intent)
+
+        if custom_payload is not None:
+            modified = custom_payload
+            print(f"[PHRASE RESULT] Custom response for intent={intent}")
+        else:
+            modified = replace_radio_urls(payload)
         response_body = json.dumps(modified, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
         (capture_dir / "response_modified.json").write_text(json.dumps(modified, ensure_ascii=False, indent=2), encoding="utf-8")
         (capture_dir / "response_body.bin").write_bytes(response_body)

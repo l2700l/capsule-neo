@@ -9,3 +9,5 @@ captures_stream/
 .DS_Store
 parse_skills.py
 skills
+latest_silero_models.yml
+streams

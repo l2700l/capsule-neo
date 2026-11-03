@@ -621,7 +621,52 @@
 }
 ```
 
-Колонка съест такую команду, но начнет произведение только после полного скачивания файла
+Колонка съест такую команду, но начнет произведение только после полного скачивания файла, без stat_flags играет сразу
+
+## bg_music и play_url
+
+Аналог media
+
+## light_demo
+
+Демонстрация работы светодиода - при включении переливается между цветами с плавными затуханиями
+
+Пример (включение)
+```json
+{
+  "qid": "c81a498473a9425689945ab0cf858bb3",
+  "result": {
+    "commands": [
+      {
+        "type": "enter_light_demo"
+      },
+    ],
+    "controls": [],
+    "skill": "unkown",
+    "asr_text": "запрос",
+    "secure": false,
+    "intent": "unkown"
+  }
+}
+```
+Пример (выключение)
+```json
+{
+  "qid": "c81a498473a9425689945ab0cf858bb3",
+  "result": {
+    "commands": [
+      {
+        "type": "exit_light_demo"
+      },
+    ],
+    "controls": [],
+    "skill": "unkown",
+    "asr_text": "запрос",
+    "secure": false,
+    "intent": "unkown"
+  }
+}
+```
 
 ## Controls
 
@@ -649,12 +694,25 @@
     "type": "repeat_control"
 }
 ```
+Установка плейлиса на репит (за что отвечает count - пока неизвестно)
+```json
+{
+    "count": 0,
+    "type": "repeat_playlist_control"
+}
+```
 Перемотка трека (по всей видимости работает только вперед)
 ```json
 {
     "elapsed": 0,
     "position": 0,
     "type": "rewind_control"
+}
+```
+Перемешать плейлист
+```json
+{
+    "type": "shuffle_control"
 }
 ```
 Пауза
