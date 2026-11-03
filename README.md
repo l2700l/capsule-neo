@@ -4,6 +4,14 @@
 
 Проект предназначен для перехвата, записи, анализа и воспроизведения запросов устройства. Цель - постепенно изучить протокол и заменить обращения к оригинальному серверу собственными обработчиками.
 
+## hardware_commands.md
+
+Отдельно вынесены типы команд, которые принимает колонка, были вытащены из разговора с колонкой в сценарии "обычного использования"
+
+Из прошивки получилось вытащить: repeat_playlist_control, send_event_data, send_event, shuffle_control, speed_test, reminder, scenario_step, enter_light_mode, exit_light_mode, enter_flowmode, bg_music, play_url, cancel_notification, reminder_cancel, playlist, kws_skip, tracks, media_type, level, seek_track, seek_second, timestamp_delta, cancel, elapsed, turn_off, speed_test_end_event, event_media_end, stat_flags
+
+tracks, media_type, level, seek_track, seek_second - вероятно относятся к внутренней структуре запроса media
+
 ## Запуск
 
 ### 1. Запустить Python-сервер

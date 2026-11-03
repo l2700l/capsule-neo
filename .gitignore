@@ -7,3 +7,5 @@ captures/
 captures_stream/
 *.mp3
 .DS_Store
+parse_skills.py
+skills
