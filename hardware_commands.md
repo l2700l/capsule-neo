@@ -615,7 +615,7 @@
     "controls": [],
     "skill": "music",
     "asr_text": "включи песню",
-    "secure": False,
+    "secure": false,
     "intent": "music.play_track"
   }
 }
