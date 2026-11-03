@@ -45,12 +45,12 @@
 255,
 255
           ],
-            "seconds": None,
+            "seconds": none,
             "duration": 15.0
         }
       ],
       "iteration_count": 1,
-      "blocking": False,
+      "blocking": false,
       "action_text": "Включаю анимацию дисплея",
       "type": "led_digits_animation"
   }
