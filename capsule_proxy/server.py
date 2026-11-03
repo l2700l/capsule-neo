@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 import uuid
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -16,7 +17,8 @@ from .handlers.stream import proxy_stream
 from .handlers.radio import serve_test_radio
 from .handlers.timezone import serve_timezone_info
 from . import websocket
-
+from .state import DeviceState
+from .config import TIMEZONE_NAME
 class Handler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
 
@@ -131,17 +133,27 @@ class Handler(BaseHTTPRequestHandler):
 def main():
     _get_model()
     websocket.start_background()
+
     server = ThreadingHTTPServer((HOST, PORT), Handler)
+    server.device_state = DeviceState(TIMEZONE_NAME, storage_path=Path("device_state.json"))
+
     print(f"Listening on http://{HOST}:{PORT}")
     print(f"Known requests:   {KNOWN_LOG}")
     print(f"Unknown requests: {UNKNOWN_LOG}")
     print(f"Sensitive header redaction: {'ON' if __import__('capsule_proxy.config', fromlist=['REDACT_SENSITIVE_HEADERS']).REDACT_SENSITIVE_HEADERS else 'OFF'}")
+
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        print("\\nStopping server")
+        print("\nStopping server")
     finally:
-        server.server_close()
+        try:
+            server.device_state.save()
+            print("[STATE] Saved successfully")
+        except OSError as exc:
+            print(f"[STATE] Failed to save: {exc}")
+        finally:
+            server.server_close()
 
 
 if __name__ == "__main__":
