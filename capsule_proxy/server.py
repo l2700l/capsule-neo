@@ -13,7 +13,7 @@ from .handlers.phrase import proxy_phrase_create, proxy_phrase_result
 from .handlers.stream import proxy_stream
 from .handlers.radio import serve_test_radio
 from .handlers.timezone import serve_timezone_info
-
+from . import websocket
 
 class Handler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
@@ -127,6 +127,7 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
+    websocket.start_background()
     server = ThreadingHTTPServer((HOST, PORT), Handler)
     print(f"Listening on http://{HOST}:{PORT}")
     print(f"Known requests:   {KNOWN_LOG}")

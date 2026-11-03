@@ -12,6 +12,10 @@ PORT = int(os.getenv("CAPSULE_PORT", "8082"))
 UPSTREAM_HOST = os.getenv("CAPSULE_UPSTREAM_HOST", "vc.go.mail.ru")
 UPSTREAM_IP = os.getenv("CAPSULE_UPSTREAM_IP", "vc.go.mail.ru")
 MAX_BODY = int(os.getenv("CAPSULE_MAX_BODY", str(64 * 1024)))
+WEBSOCKET_PORT = int(os.getenv("CAPSULE_WEBSOCKET_PORT", "8083"))
+WEBSOCKET_MAX_MESSAGE = int(
+    os.getenv("CAPSULE_WEBSOCKET_MAX_MESSAGE", str(1024 * 1024))
+)
 
 KNOWN_LOG = Path(os.getenv("CAPSULE_KNOWN_LOG", "capsule_known_requests.jsonl"))
 UNKNOWN_LOG = Path(os.getenv("CAPSULE_UNKNOWN_LOG", "capsule_unknown_requests.jsonl"))

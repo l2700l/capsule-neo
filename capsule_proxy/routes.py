@@ -9,6 +9,7 @@ from .handlers.settings import (
     get_alarm_music, get_alarms,
 )
 from .handlers.logs import send_runtime_logs
+from .handlers.websocket import send_websocket_ping
 
 ROUTES = [
     ("GET", re.compile(r"^/device/firmware$"), None, get_firmware),
@@ -23,6 +24,7 @@ ROUTES = [
     ("GET", re.compile(r"^/device/settings/v1/[^/]+/general$"), None, get_general),
     ("GET", re.compile(r"^/device/settings/v1/[^/]+/alarm_music$"), None, get_alarm_music),
     ("GET", re.compile(r"^/device/settings/v1/[^/]+/alarms$"), None, get_alarms),
+    ("POST", re.compile(r"^/websocket/ping$"), None, send_websocket_ping),
 ]
 
 
