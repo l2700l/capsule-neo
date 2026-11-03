@@ -601,14 +601,14 @@
           "stat_flags": "{\"audio_id_source\": \"url\", \"cpp_hash\": \"de2bf9087708b754\", \"performer\": \"\\u0420\\u0443\\u0441\\u0441\\u043a\\u043e\\u0435 \\u0440\\u0430\\u0434\\u0438\\u043e\", \"title\": \"105,7\", \"is_child_voice\": \"0\", \"child_recognition\": \"0\", \"mode\": \"default\", \"child_content_type\": \"0\", \"skill\": \"radio\", \"audio_url\": \"url.mp3\"}"
         },
         "media_type": 1,
-        "kws_skip": None,
-        "autoplay": True,
-        "append": False,
-        "event_media_end": None,
+        "kws_skip": null,
+        "autoplay": true,
+        "append": false,
+        "event_media_end": null,
         "action_text": "",
         "content_value": {},
-        "need_vk_session": None,
-        "page_token": None,
+        "need_vk_session": null,
+        "page_token": null,
         "type": "media"
       }
     ],
