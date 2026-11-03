@@ -11,7 +11,7 @@ _LOG_LOCK = threading.Lock()
 def append_jsonl(filename, record):
     path = Path(filename)
     path.parent.mkdir(parents=True, exist_ok=True)
-    line = json.dumps(record, ensure_ascii=False, separators=(",", ":"))
+    line = json.dumps(record, ensure_ascii=False, separators=(",", ":"), default=str)
     with _LOG_LOCK, path.open("a", encoding="utf-8") as stream:
         stream.write(line + "\n")
 
