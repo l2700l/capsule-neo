@@ -1,0 +1,58 @@
+{
+  "settings": {
+    "general": {
+      "home_id": "test-home",
+      "room_id": "",
+      "groups": [],
+      "id": "capsula-neo-test-device",
+      "revision": 2,
+      "name": "Capsule Neo",
+      "coordinates": [
+        0.0,
+        0.0
+      ],
+      "timezone": "Europe/Samara",
+      "keyword_sound": true,
+      "children_mode": false,
+      "alarm_volume": 40,
+      "master_volume": 60,
+      "skillserver_type": "",
+      "reminder_sync": true,
+      "allow_music_from_app": true,
+      "upnp_discovery": false,
+      "bt_handsfree": false,
+      "blackbox_depth": 30,
+      "clock_brightness": -1,
+      "clock_night_brightness": -1,
+      "clock_enabled": true,
+      "demomode_enabled_at": null,
+      "is_blocked": false,
+      "speaker_calls_available": false,
+      "baby_monitor_calls_available": false
+    },
+    "night_mode": {
+      "id": "capsula-neo-test-device",
+      "revision": 2,
+      "enabled": false,
+      "scheduled": true,
+      "start_at": 0,
+      "stop_at": 36000
+    },
+    "content_privacy": {
+      "id": "capsula-neo-test-device",
+      "revision": 1,
+      "mail": false,
+      "calendar": false,
+      "vk_messages": false,
+      "telegram": true,
+      "vk_messages_notifications": false
+    },
+    "safe_mode": {
+      "id": "capsula-neo-test-device",
+      "revision": 1,
+      "enabled": false
+    }
+  },
+  "alarms": [],
+  "reminders": []
+}

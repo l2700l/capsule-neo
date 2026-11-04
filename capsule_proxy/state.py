@@ -134,6 +134,7 @@ class DeviceState:
                         file,
                         ensure_ascii=False,
                         indent=2,
+                        default=str,
                     )
                     file.write("\n")
                     file.flush()
