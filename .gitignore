@@ -11,3 +11,4 @@ parse_skills.py
 skills
 latest_silero_models.yml
 streams
+device_state.json

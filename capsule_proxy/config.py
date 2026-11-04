@@ -12,6 +12,7 @@ PORT = int(os.getenv("CAPSULE_PORT", "8082"))
 UPSTREAM_HOST = os.getenv("CAPSULE_UPSTREAM_HOST", "vc.go.mail.ru")
 UPSTREAM_IP = os.getenv("CAPSULE_UPSTREAM_IP", "vc.go.mail.ru")
 MAX_BODY = int(os.getenv("CAPSULE_MAX_BODY", str(64 * 1024)))
+ASSISTANT_URL = os.getenv("ASSISTANT_URL", "http://localhost:8090")
 WEBSOCKET_PORT = int(os.getenv("CAPSULE_WEBSOCKET_PORT", "8083"))
 WEBSOCKET_MAX_MESSAGE = int(
     os.getenv("CAPSULE_WEBSOCKET_MAX_MESSAGE", str(1024 * 1024))

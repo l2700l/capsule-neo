@@ -5,11 +5,11 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit
 
 from .config import CAPTURE_DIR, HOST, PORT, MAX_BODY, KNOWN_LOG, UNKNOWN_LOG, UPSTREAM_HOST
-from .http_utils import send_bytes, send_json
+from .http_utils import send_json
 from .logging_utils import append_jsonl, safe_headers, make_curl
 from .parsing import parse_body
 from .routes import find_route, invoke_route
-from .handlers.phrase import proxy_phrase_create, proxy_phrase_result
+from .handlers.phrase import proxy_to_assistant
 from .handlers.stream import proxy_stream
 from .handlers.radio import serve_test_radio
 from .handlers.timezone import serve_timezone_info
@@ -39,7 +39,7 @@ class Handler(BaseHTTPRequestHandler):
             serve_timezone_info(self)
             return
         if self.command == "GET" and path == "/phrase/result":
-            proxy_phrase_result(self)
+            proxy_to_assistant(self, transform_result=True)
             return
         if self.command == "GET" and path == "/radio.mp3":
             serve_test_radio(self)
@@ -54,7 +54,7 @@ class Handler(BaseHTTPRequestHandler):
         if self.command == "POST" and (
             path.startswith("/phrase/create") or path.startswith("/phrase/add")
         ):
-            proxy_phrase_create(self, body)
+            proxy_to_assistant(self, body)
             return
         body_file = None
 
