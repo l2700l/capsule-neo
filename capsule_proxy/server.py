@@ -1,11 +1,8 @@
-import json
 from pathlib import Path
 import uuid
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlsplit
-
-from capsule_proxy.tts_engine import _get_model
 
 from .config import CAPTURE_DIR, HOST, PORT, MAX_BODY, KNOWN_LOG, UNKNOWN_LOG, UPSTREAM_HOST
 from .http_utils import send_bytes, send_json
@@ -131,7 +128,6 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
-    _get_model()
     websocket.start_background()
 
     server = ThreadingHTTPServer((HOST, PORT), Handler)

@@ -5,7 +5,6 @@ from datetime import datetime, timezone
 from ..config import UPSTREAM_HOST, UPSTREAM_IP, STREAM_CAPTURE_DIR
 from ..logging_utils import safe_headers
 from ..upstream import DirectHTTPSConnection, filtered_headers
-from ..audio_streams import find_stream, serve_stream, stream_id_from_request
 
 
 STREAM_HOP_BY_HOP = {
@@ -15,13 +14,6 @@ STREAM_HOP_BY_HOP = {
 
 
 def proxy_stream(handler):
-    stream_id = stream_id_from_request(handler.path)
-    local_stream = find_stream(stream_id)
-
-    if local_stream is not None:
-        serve_stream(handler, local_stream)
-        print(f"[stream] Local audio: {stream_id}")
-        return
     capture_dir = STREAM_CAPTURE_DIR / (
         datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S_%fZ")
         + "_" + uuid.uuid4().hex[:8]
