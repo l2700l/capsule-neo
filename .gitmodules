@@ -1,0 +1,3 @@
+[submodule "marusya"]
+	path = marusya
+	url = https://github.com/l2700l/capsule-marusya.git
