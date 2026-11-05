@@ -11,6 +11,7 @@ from .parsing import parse_body
 from .routes import find_route, invoke_route
 from .handlers.phrase import proxy_to_assistant
 from .handlers.stream import proxy_stream
+# from .handlers.phrase_proxy import proxy_phrase_create, proxy_phrase_result
 from .handlers.radio import serve_test_radio
 from .handlers.timezone import serve_timezone_info
 from . import websocket
@@ -34,13 +35,15 @@ class Handler(BaseHTTPRequestHandler):
     def handle_request(self):
         parsed = urlsplit(self.path)
         path, query = parsed.path, parsed.query
-
         if path == "/device/timezone/info":
             serve_timezone_info(self)
             return
         if self.command == "GET" and path == "/phrase/result":
             proxy_to_assistant(self, transform_result=True)
             return
+        # if self.command == "GET" and path == "/phrase/result":
+        #     proxy_phrase_result(self)
+        #     return
         if self.command == "GET" and path == "/radio.mp3":
             serve_test_radio(self)
             return
@@ -51,6 +54,15 @@ class Handler(BaseHTTPRequestHandler):
             proxy_stream(self)
             return
         # TODO: добавить stt и классификатор, сейчас запросы проксируются на сервера ВК
+        # if self.command == "POST" and (
+        #     path.startswith("/phrase/create") or path.startswith("/phrase/add")
+        # ):
+        #     proxy_phrase_create(self, body)
+        #     return
+        # if self.command == "GET" and path == "/stream":
+        #     proxy_stream(self)
+        #     return
+        # # TODO: добавить stt и классификатор, сейчас запросы проксируются на сервера ВК
         if self.command == "POST" and (
             path.startswith("/phrase/create") or path.startswith("/phrase/add")
         ):
