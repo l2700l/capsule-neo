@@ -3,7 +3,7 @@ import shlex
 import threading
 from pathlib import Path
 
-from .config import REDACT_SENSITIVE_HEADERS, SENSITIVE_HEADERS
+from config import REDACT_SENSITIVE_HEADERS, SENSITIVE_HEADERS
 
 _LOG_LOCK = threading.Lock()
 

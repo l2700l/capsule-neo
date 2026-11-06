@@ -1,6 +1,13 @@
-def get_firmware(handler, body=b""):
-    # Sanitized mock values: never publish a real device identifier/QID.
-    return 200, {
+
+from fastapi import APIRouter
+
+from utils.responses import json_response
+
+router = APIRouter()
+
+@router.get("/device/firmware")
+async def get_firmware():
+    return json_response({
         "result": {
             "platform": "capsula-neo-1",
             "version": "3.5",
@@ -14,11 +21,13 @@ def get_firmware(handler, body=b""):
             "url": "https://vcfw.vkcdn.ru/capsula-neo-1/3.5?device_id=REDACTED&_qid=REDACTED&device_ver=3.5",
             "need_update": False,
         }
-    }, "json"
+    })
 
-def set_stat(handler, body=""):
-    return 200, {
-            "result": {
-                "validation_errors":None
-            }
-    }, "json"
+
+@router.post("/device/stat")
+async def set_stat():
+    return json_response({
+        "result": {
+            "validation_errors": None,
+        }
+    })
