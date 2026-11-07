@@ -1,6 +1,6 @@
 
 import uuid
-from msgpack import msgpack
+import msgpack
 from fastapi.responses import JSONResponse, Response
 
 

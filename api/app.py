@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from api.routes import device, logs, timezone, settings, websocket, phrase, stream
 from state import DeviceState
 from config import TIMEZONE_NAME
-from websocket.server import websocket_server
+from web_socket.server import websocket_server
 
 
 @asynccontextmanager
