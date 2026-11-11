@@ -2,7 +2,10 @@
 import json
 import os
 import tempfile
-
+import time
+import uuid
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 from copy import deepcopy
 from pathlib import Path
 from threading import RLock
@@ -15,7 +18,8 @@ class DeviceState:
     def __init__(self, timezone_name: str, storage_path):
         self._lock = RLock()
         self._storage_path = Path(storage_path)
-
+        self._alarm_refresh_pending = set()
+        self._alarm_refresh_done = set()
         self._settings = {
             "general": {
                 "home_id": "test-home",
@@ -186,3 +190,172 @@ class DeviceState:
         with self._lock:
             setattr(self, f"_{name}", deepcopy(items))
             self.save()
+
+    def add_alarm(self, item: dict) -> dict:
+        if not isinstance(item, dict):
+            raise TypeError("Alarm must be a dictionary")
+
+        with self._lock:
+            alarm = {
+                "enabled": item.get("enabled", True),
+                "alarm_time": item["alarm_time"],
+                "weekdays": deepcopy(item.get("weekdays", [])),
+                "first_time": item.get("first_time", 0),
+                "id": str(uuid.uuid4()),
+                "revision": 1,
+                "updated": time.time(),
+            }
+
+            self._alarms.append(alarm)
+            self.save()
+
+            return deepcopy(alarm)
+
+    def update_alarm(self, alarm_id: str, changes: dict) -> dict | None:
+        if not isinstance(changes, dict):
+            raise TypeError("Changes must be a dictionary")
+
+        allowed = {
+            "enabled",
+            "alarm_time",
+            "weekdays",
+            "first_time",
+        }
+
+        changes = {
+            key: value
+            for key, value in changes.items()
+            if key in allowed
+        }
+
+        with self._lock:
+            for alarm in self._alarms:
+                if alarm["id"] != alarm_id:
+                    continue
+
+                if changes:
+                    alarm.update(deepcopy(changes))
+                    alarm["revision"] += 1
+                    alarm["updated"] = time.time()
+                    self.save()
+
+                return deepcopy(alarm)
+
+        return None
+
+    def disable_alarm(self, alarm_id: str) -> dict | None:
+        return self.update_alarm(
+            alarm_id,
+            {"enabled": False},
+        )
+    def disable_all_alarms(self) -> list:
+        with self._lock:
+            now = time.time()
+            changed = False
+
+            for alarm in self._alarms:
+                if alarm["enabled"]:
+                    alarm["enabled"] = False
+                    alarm["revision"] += 1
+                    alarm["updated"] = now
+                    changed = True
+
+            if changed:
+                self.save()
+
+            return deepcopy(self._alarms)
+    def sync_alarms(self) -> tuple[list, list]:
+        with self._lock:
+            now = time.time()
+
+            timezone_name = self._settings["general"]["timezone"]
+            local_now = datetime.now(ZoneInfo(timezone_name))
+
+            today = local_now.date().isoformat()
+            current_midnight = local_now.replace(
+                hour=0,
+                minute=0,
+                second=0,
+                microsecond=0,
+            )
+
+            alarms = deepcopy(self._alarms)
+            refreshes = []
+            changed = False
+
+            for index, alarm in enumerate(self._alarms):
+                if not alarm.get("enabled", False):
+                    continue
+
+                weekdays = alarm.get("weekdays", [])
+                first_time = alarm.get("first_time", 0)
+
+                # Одноразовый будильник.
+                if not weekdays:
+                    if (
+                        isinstance(first_time, (int, float))
+                        and not isinstance(first_time, bool)
+                        and first_time > 0
+                        and first_time + 5 <= now
+                    ):
+                        alarm["enabled"] = False
+                        alarm["revision"] += 1
+                        alarm["updated"] = now
+
+                        alarms[index]["enabled"] = False
+                        changed = True
+
+                    continue
+
+                # Повторяющийся будильник.
+                if local_now.isoweekday() not in weekdays:
+                    continue
+
+                alarm_time = alarm.get("alarm_time")
+
+                if (
+                    isinstance(alarm_time, bool)
+                    or not isinstance(alarm_time, int)
+                    or not 0 <= alarm_time < 86400
+                ):
+                    continue
+
+                scheduled_at = current_midnight + timedelta(
+                    seconds=alarm_time + 5
+                )
+
+                if local_now < scheduled_at:
+                    continue
+
+                alarm_id = alarm["id"]
+                key = (alarm_id, today)
+
+                if key in self._alarm_refresh_done:
+                    # Уже прошло срабатывание, расписание снова активно.
+                    continue
+
+                # Временно выключаем будильник только в ответе колонке.
+                alarms[index]["enabled"] = False
+
+                if key not in self._alarm_refresh_pending:
+                    self._alarm_refresh_pending.add(key)
+                    refreshes.append(key)
+
+            if changed:
+                self.save()
+
+            return alarms, refreshes
+
+
+    def complete_alarm_refresh(self, refreshes: list):
+        with self._lock:
+            for key in refreshes:
+                self._alarm_refresh_pending.discard(key)
+                self._alarm_refresh_done.add(key)
+
+
+    def retry_alarm_refresh(self, refreshes: list):
+        with self._lock:
+            for key in refreshes:
+                self._alarm_refresh_done.discard(key)
+                self._alarm_refresh_pending.discard(key)
