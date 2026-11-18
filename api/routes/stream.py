@@ -76,6 +76,7 @@ def filter_request_headers(headers):
 
 
 @router.get("/stream")
+@router.get("/music/stream/{stream_id}.mp3")
 async def proxy_stream(request: Request):
     """Проксирует аудиопоток с ассистента на колонку."""
 
